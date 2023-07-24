@@ -21,7 +21,7 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const expectedLabels = new Set<string>(["can-rollback", "no-rollback"]);
+            const expectedLabels = new Set(["can-rollback", "no-rollback"]);
             console.log(`Running a check to verify that the PR has the mandatory rollback labels`);
 
             const {CURRENT_PR_NUMBER} = process.env
