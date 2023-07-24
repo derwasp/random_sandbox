@@ -11,14 +11,6 @@ on:
 
 jobs:
   check_labels:
-    name: Check labels
-    runs-on: ubuntu-latest
-    steps:
-      - uses: docker://agilepathway/pull-request-label-checker:latest
-        with:
-          one_of: rollbackable,non-rollbackable
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-  check_labels2:
     runs-on: ubuntu-latest
     permissions:
       issues: write
