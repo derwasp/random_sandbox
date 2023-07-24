@@ -44,7 +44,7 @@ jobs:
             let hasOnlyOneLabel = false;
 
             for (let label of labels) {
-              if (expectedLabels.contains(label))
+              if (expectedLabels.has(label))
                 hasOnlyOneLabel = !hasOnlyOneLabel
             }
             const concatLabels = Array.from(expectedLabels).join(" ,");
