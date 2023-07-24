@@ -20,6 +20,9 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
   check_labels2:
     runs-on: ubuntu-latest
+    permissions:
+      issues: read|write|none
+      pull-requests: read|write|none
     env:
       CURRENT_PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
