@@ -33,7 +33,7 @@ jobs:
 
             console.log(`PR number is ${CURRENT_PR_NUMBER}, checking for the rollback labels`);
 
-            const { data: pullRequest } = await octokit.rest.pulls.get({
+            const { data: pullRequest } = await github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: CURRENT_PR_NUMBER,
