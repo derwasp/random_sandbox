@@ -18,3 +18,37 @@ jobs:
         with:
           one_of: rollbackable,non-rollbackable
           repo_token: ${{ secrets.GITHUB_TOKEN }}
+  check_labels2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const expectedLabels = ["can-rollback", "no-rollback"];
+            console.log(`Running a check to verify that the PR has the mandatory rollback labels`);
+            console.log(`Finding the PR number..`);
+            const { data } =
+                await github.rest.repos.listPullRequestsAssociatedWithCommit({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  commit_sha: context.sha,
+                });
+            const prNumber = data[0] && data[0].number;
+            if (!prNumber) {
+              return;
+            }
+            console.log(`PR number is ${prNumber}`);
+            console.log(`Checking whether the PR has rollback labels`);
+            if(true) {
+              const concatLabels = expectedLabels.join(", ");
+              const message = `⚠️ This PR doesn't have one of these labels: ${concatLabels}.`
+
+              github.rest.issues.createComment({
+                issue_number: CURRENT_PR_NUMBER,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: message,
+              })
+
+              throw message;
+            }
