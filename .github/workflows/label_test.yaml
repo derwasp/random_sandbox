@@ -47,7 +47,7 @@ jobs:
               if (expectedLabels.contains(label))
                 hasOnlyOneLabel = !hasOnlyOneLabel
             }
-            const concatLabels = expectedLabels.join(", ");
+            const concatLabels = Array.from(expectedLabels).join(" ,");
             if(!hasOnlyOneLabel) {
               const message = `⚠️ This PR doesn't have one of these labels: [ ${concatLabels} ].`
 
