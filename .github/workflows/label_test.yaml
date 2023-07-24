@@ -29,20 +29,35 @@ jobs:
       - uses: actions/github-script@v6
         with:
           script: |
-            const expectedLabels = ["can-rollback", "no-rollback"];
+            const expectedLabels = new Set<string>(["can-rollback", "no-rollback"]);
             console.log(`Running a check to verify that the PR has the mandatory rollback labels`);
-            console.log(`Finding the PR number..`);
 
             const {CURRENT_PR_NUMBER} = process.env
 
             if (!CURRENT_PR_NUMBER) {
+              throw "This should not have happened: somehow there's no PR number, while this action needs a PR number to function"
               return;
             }
-            console.log(`PR number is ${CURRENT_PR_NUMBER}`);
-            console.log(`Checking whether the PR has rollback labels`);
-            if(true) {
-              const concatLabels = expectedLabels.join(", ");
-              const message = `⚠️ This PR doesn't have one of these labels: ${concatLabels}.`
+
+            console.log(`PR number is ${CURRENT_PR_NUMBER}, checking for the rollback labels`);
+
+            const { data: pullRequest } = await octokit.rest.pulls.get({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: CURRENT_PR_NUMBER,
+              })
+            
+            const labels = pullRequest.labels.map(label => label.name)
+
+            let hasOnlyOneLabel = false;
+
+            for (let label of labels) {
+              if (expectedLabels.contains(label))
+                hasOnlyOneLabel = !hasOnlyOneLabel
+            }
+            const concatLabels = expectedLabels.join(", ");
+            if(!hasOnlyOneLabel) {
+              const message = `⚠️ This PR doesn't have one of these labels: [ ${concatLabels} ].`
 
               github.rest.issues.createComment({
                 issue_number: CURRENT_PR_NUMBER,
@@ -52,4 +67,7 @@ jobs:
               })
 
               throw message;
+            } else {
+              console.log(`PR is valid and has a only a single label out of [ ${concatLabels} ]`);
             }
+            
