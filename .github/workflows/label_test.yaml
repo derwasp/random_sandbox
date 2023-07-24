@@ -20,6 +20,8 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
   check_labels2:
     runs-on: ubuntu-latest
+    env:
+      CURRENT_PR_NUMBER: ${{ github.event.pull_request.number }}
     steps:
       - uses: actions/github-script@v6
         with:
@@ -27,17 +29,13 @@ jobs:
             const expectedLabels = ["can-rollback", "no-rollback"];
             console.log(`Running a check to verify that the PR has the mandatory rollback labels`);
             console.log(`Finding the PR number..`);
-            const { data } =
-                await github.rest.repos.listPullRequestsAssociatedWithCommit({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  commit_sha: context.sha,
-                });
-            const prNumber = data[0] && data[0].number;
-            if (!prNumber) {
+
+            const {CURRENT_PR_NUMBER} = process.env
+
+            if (!CURRENT_PR_NUMBER) {
               return;
             }
-            console.log(`PR number is ${prNumber}`);
+            console.log(`PR number is ${CURRENT_PR_NUMBER}`);
             console.log(`Checking whether the PR has rollback labels`);
             if(true) {
               const concatLabels = expectedLabels.join(", ");
