@@ -51,8 +51,7 @@ jobs:
             if(!hasOnlyOneLabel) {
               const message = `⚠️ This PR doesn't have **exactly one** of these labels: [ ${concatLabels} ].
 
-Make sure to add exactly one of the labels mentioned above to this PR. This is required for the monolith evolution to track the amount of PRs that can be rolled back.
-`
+Make sure to add exactly one of the labels mentioned above to this PR. This is required for the monolith evolution to track the amount of PRs that can be rolled back.`
 
               github.rest.issues.createComment({
                 issue_number: CURRENT_PR_NUMBER,
