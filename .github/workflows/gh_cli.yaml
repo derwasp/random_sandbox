@@ -1,0 +1,11 @@
+on:
+  push:
+     branches:
+       - master
+
+jobs:
+  whatever:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print new build number
+        run: "gh api -H 'Accept: application/vnd.github+json' -H 'X-GitHub-Api-Version: 2022-11-28' /user"
